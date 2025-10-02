@@ -1,0 +1,110 @@
+:root {
+    --heading: #4a2d24;
+    --normal: #b89576;
+    --buy: #B8FFC2;
+    --hover-buy: #a3ffb0;
+    --click-buy: #8cff9e;
+    --disabled: #b8a795; 
+}
+
+.text-center.position-relative #display {
+  top: 50% !important;
+  right: 4rem !important;
+  transform: translateY(-50%);
+  font-family: "National Park", "sans serif";
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.crit-progress {
+  width: 320px;
+  height: 1.5rem;
+  margin: 16px auto;
+}
+
+.crit-progress .progress-bar {
+  transition: width 150ms ease;
+  background-color: var(--normal);
+  background-image: none;
+}
+
+.shell-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+  user-select: none;
+}
+
+.shell-btn:focus,
+.shell-btn:active {
+  outline: none;
+  box-shadow: none;
+}
+
+.shell-img {
+  display: block;
+  width: 350px;
+  height: 350px;
+  transition: transform 120ms ease;
+}
+
+
+.shell-btn:active .shell-img {
+  transform: scale(1.1);
+}
+
+.btn-buy {
+  background-color: var(--buy);
+  border: 1px solid var(--buy);
+  color: #000;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.btn-buy:hover:not(:disabled),
+.btn-buy:focus:not(:disabled) {
+  background-color: var(--hover-buy);
+  border-color: var(--hover-buy);
+  color: #000;
+}
+
+
+.btn-buy:active,
+.btn-buy.active,
+.btn-buy:focus,
+.btn-buy:focus-visible {
+  background-color: var(--click-buy);
+  border-color: var(--click-buy);
+  color: #000;
+  box-shadow: none;
+  outline: none;
+}
+
+.card {
+  position: relative;
+  z-index: 2;
+}
+.text-center.position-relative #display {
+  z-index: 1;
+}
+
+body {
+    background-image: url("images/background.svg");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 100% auto;
+}
+h1 {
+    font-family: "Dynapuff", "Arial";
+    font-weight: 900;
+    color: var(--heading);
+}
+
+p {
+    font-family: "National Park", "sans-serif";
+    font-weight: 700;
+    opacity: 60%;
+    color: var(--heading);
+}

@@ -4,14 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shell Clicker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=National+Park:wght@200..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" ...>
+   <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
-    <button type="button" id="shellBtn">Click!</button>
-    <div id="display">You have 0 <img src="images/shell.png" alt="shell" width="15" height="15"></div>
-    <button type="button" id="upgrade">Upgrade Clicker for 25 <img src="images/shell.png" alt="shell" width="15" height="15"></button>
-    <button type="button" id="autoClicker">Unlock Autoclick for 15 <img src="images/shell.png" alt="shell" width="15" height="15"></button>
-    <button type="button" id="jackpot">Enter Jackpot for 15 <img src="images/shell.png" alt="shell" width="15" height="15"></button>
-    <div id="jackpotDiv">Time left until lottery ends: 30 days</div>
+<div class="text-center pt-5 position-relative">
+    <h1><div class="fs-1">Shelly Click</div></h1>
+    <p class="fs-3">An unofficial clicker game for the Summer of Making!</p>
+
+    <div id="display" class="btn btn-buy position-absolute top-0 end-0" role="button" aria-label="Shell count">
+      <img src="images/shell.png" alt="shell" width="15" height="15"> 0 Shells
+    </div>
+</div>
+    
+<div class="container-fluid px-3 px-md-4 px-lg-5">
+  <div class="row g-4 justify-content-center mt-2">
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+              <h5 id="upgrade" class="card-title">Unlock Shell Multiplier</h5>
+              <p class="card-text mb-2">Get yourself a Macbook Pro with a 6-7 multiplier!</p>
+              </div>
+              <span id="multiplierCount" class="badge text-bg-primary rounded-pill">0</span>
+          </li>
+          <button id="buyMultiplier" class="btn btn-buy mt-2">Buy for <img src="images/shell.png" alt="shell" width="15" height="15"> 15 shells!</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+              <h5 id="autoClicker" class="card-title">Unlock Autoclicker</h5>
+              <p class="card-text mb-2">Relax and let the vibers click for you!</p>
+              </div>
+              <span class="badge text-bg-primary rounded-pill">0</span>
+          </li>
+          <button id="buyAutoClicker" class="btn btn-buy mt-2">Buy for <img src="images/shell.png" alt="shell" width="15" height="15"> 67 shells!</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+              <h5 class="card-title">Enter Jackpot</h5>
+              <p class="card-text mb-2">99% of gamblers quit before they win big!</p>
+              </div>
+              <span id="jackpotBadge" class="badge text-bg-primary rounded-pill">0</span>
+          </li>
+
+          <button id="jackpot" type="button" class="btn btn-buy mt-2">Buy entry for <img src="images/shell.png" alt="shell" width="15" height="15"> 10 shells!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ <div class="d-flex justify-content-center mt-5 mb-2">
+    <button type="button" id="shellBtn" class="shell-btn" aria-label="Shell">
+      <img src="images/shell.png" alt="shell" class="shell-img">
+    </button>
+ </div>
+
+<div class="progress crit-progress" role="progressbar" aria-label="Critical hit progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+  <div id="critProgressBar" class="progress-bar" style="width: 0%"></div>
+</div>
+
+<button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <img src="images/compass.gif" width="25" height="25" class="rounded me-2" alt="timer">
+      <strong class="me-auto">Rowan's Lottery</strong>
+      <small id="cd">30 secs left</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        Lottery in progress
+    </div>
+  </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
     <script src="script.js"></script>
 </body>
 </html>
