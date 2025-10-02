@@ -7,6 +7,10 @@
     --disabled: #b8a795; 
 }
 
+html, body {
+  height: 100%;
+}
+
 .text-center.position-relative #display {
   top: 50% !important;
   right: 4rem !important;
@@ -91,10 +95,11 @@
 }
 
 body {
-    background-image: url("images/background.svg");
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-size: 100% auto;
+  background-image: url("images/background.svg");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover; /* fill entire screen on resize */
+  min-height: 100vh; /* ensure full viewport height */
 }
 h1 {
     font-family: "Dynapuff", "Arial";
@@ -107,4 +112,9 @@ p {
     font-weight: 700;
     opacity: 60%;
     color: var(--heading);
+}
+
+/* Push the shell further down on the page */
+.shell-area {
+  padding-top: 6rem;
 }

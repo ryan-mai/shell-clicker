@@ -7,6 +7,7 @@ const multiplierIcon = document.getElementById('multiplierCount')
 
 const autoClicker = document.getElementById('autoClicker');
 const buyAutoClickerBtn = document.getElementById('buyAutoClicker');
+const autoClickerBadge = document.getElementById('autoClickerBadge');
 
 const jackpot = document.getElementById('jackpot');
 const jackpotDisplay = document.getElementById('jackpotDiv');
@@ -23,6 +24,19 @@ if (toastLiveExample) {
   toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
 }
 
+function showToast(message) {
+    if (!toastLiveExample || !toastBootstrap) return;
+    const body = toastLiveExample.querySelector('.toast-body');
+    if (body) body.textContent = message;
+    const isVisible = toastLiveExample.classList.contains('show');
+    if (isVisible) {
+        toastBootstrap.hide();
+        setTimeout(() => toastBootstrap && toastBootstrap.show(), 75);
+    } else {
+        toastBootstrap.show();
+    }
+}
+
 if (toastTrigger && toastBootstrap) {
   toastTrigger.addEventListener('click', () => {
     toastBootstrap.show();
@@ -34,6 +48,7 @@ let multi = 1;
 let multiCost = 15;
 let autoClickers = 0;
 let autoClickerCost = 67;
+let autoClickerCps = 1;
 
 let entryCost = 10;
 let entries = 0;
@@ -112,9 +127,13 @@ if (buyAutoClickerBtn) {
     buyAutoClickerBtn.addEventListener("click", function(e) {
         if (shells >= autoClickerCost) {
             shells -= autoClickerCost;
-            autoClickers ++;
+            autoClickers++;
             autoClickerCost = Math.round(autoClickerCost * 1.25);
-            autoClicker.innerHTML = `Upgrade autoclicker for ${autoClickerCost} <img src="images/shell.png" alt="shell" width="10" height="10">`;
+            const cpsGain = 1 + Math.floor(autoClickers / 5);
+            autoClickerCps += cpsGain;
+
+            if (autoClickerBadge) autoClickerBadge.textContent = `${autoClickers}`;
+            if (buyAutoClickerBtn) buyAutoClickerBtn.innerHTML = `Upgrade for <img src="images/shell.png" alt="shell" width="15" height="15"> ${autoClickerCost} shells! (+${cpsGain} cps)`;
             displayShells();
             update();
         } else {
@@ -123,41 +142,10 @@ if (buyAutoClickerBtn) {
     })
 }
 function displayJackpot() {
-    const jackpotInterval = setInterval(function() {
-        if (entries > 0) {
-            jackpotTimeLeft -= 1;
-            displayJackpot();
-    
-            if (jackpotTimeLeft <= 0) {
-                npcEntries += getRandomInt(entries * 5, entries * 10);
-                const winner = getRandomInt(entries, npcEntries);
-                if (winner === entries){
-                    shells += npcEntries * entryCost;
-                }
-    
-                entries = 0;
-                npcEntries = 0;
-                jackpotTimeLeft = jackpotCd;
-    
-                displayShells();
-                displayJackpot();
-                update();
-    
-                if (toastBootstrap && toastLiveExample) {
-                  const body = toastLiveExample.querySelector('.toast-body');
-                  if (body) body.textContent = 'Lottery finished — winner drawn!';
-                  toastBootstrap.show();
-                }
-            }
-        } else {
-            jackpotTimeLeft = jackpotCd;
-            displayJackpot();
-        }
-    }, 1000);
     if (cd) {
         cd.textContent = entries > 0
             ? (jackpotTimeLeft > 0 ? `${jackpotTimeLeft} secs left` : `Drawing...`)
-            : `${jackpotCd} secs`;
+            : `${jackpotCd} secs left`;
     }
 
     if (!jackpotDisplay) return;
@@ -180,9 +168,10 @@ if (jackpot) jackpot.addEventListener("click", function(e) {
         displayShells();
         displayJackpot();
         update();
-        if (entries === 1 && toastBootstrap) {
-          toastBootstrap.show();
-        }
+                        if (entries === 1 && toastBootstrap) {
+                            if (cd) cd.textContent = `${jackpotCd} secs left`;
+                            showToast('Lottery in progress');
+                        }
     } else {
         console.log('Not enough shells!')
     }
@@ -190,7 +179,7 @@ if (jackpot) jackpot.addEventListener("click", function(e) {
 
 const autoInterval = setInterval(function() {
     if (autoClickers > 0) {
-        shells += autoClickers;
+        shells += autoClickerCps;
         displayShells();
         update();
     }
@@ -203,25 +192,27 @@ const jackpotInterval = setInterval(function() {
 
         if (jackpotTimeLeft <= 0) {
             npcEntries += getRandomInt(entries * 5, entries * 10);
-            const winner = getRandomInt(entries, npcEntries);
-            if (winner === entries){
-                shells += npcEntries * entryCost;
+            const totalTickets = entries + npcEntries;
+            let userWon = false;
+            if (totalTickets > 0) {
+                const draw = getRandomInt(1, totalTickets);
+                userWon = draw <= entries;
+                if (userWon) {
+                    const winnings = npcEntries * entryCost;
+                    shells += winnings;
+                }
             }
 
             entries = 0;
             npcEntries = 0;
             jackpotTimeLeft = jackpotCd;
+            if (jackpotIcon) jackpotIcon.textContent = '0';
 
             displayShells();
             displayJackpot();
             update();
 
-            // Show the toast again when the winner has been drawn
-            if (toastBootstrap && toastLiveExample) {
-                const body = toastLiveExample.querySelector('.toast-body');
-                if (body) body.textContent = 'Lottery finished — winner drawn!';
-                toastBootstrap.show();
-            }
+            showToast(userWon ? 'You won the lottery! 🎉' : 'No luck this time.');
 
         }
     } else {
@@ -240,3 +231,6 @@ displayShells();
 displayJackpot();
 updateCritProgress();
 update();
+
+if (autoClickerBadge) autoClickerBadge.textContent = `${autoClickers}`;
+if (buyAutoClickerBtn) buyAutoClickerBtn.innerHTML = `Buy for <img src="images/shell.png" alt="shell" width="15" height="15"> ${autoClickerCost} shells!)`;
